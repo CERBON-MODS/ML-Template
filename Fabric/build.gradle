@@ -104,10 +104,11 @@ tasks.register("publishCurseForge", TaskPublishCurseForge) {
 
     def mainFile = upload(000000, remapJar)
     mainFile.addModLoader("Fabric")
-    mainFile.changelog = rootProject.file(changelog).getText("UTF-8")
-    mainFile.changelogType = "markdown"
+    mainFile.addGameVersion(minecraft_version)
     mainFile.releaseType = release_type
-    mainFile.addGameVersion("${minecraft_version}")
+    mainFile.changelogType = "markdown"
+    mainFile.changelog = rootProject.file(changelog).getText("UTF-8")
+
     mainFile.addRequirement("fabric-api")
     mainFile.addRequirement(cerbons_api)
 }
