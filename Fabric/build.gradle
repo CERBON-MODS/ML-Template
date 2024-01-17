@@ -1,5 +1,8 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'net.darkhax.curseforgegradle' version '1.1.18'
 }
 
 architectury {
@@ -93,6 +96,18 @@ components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
         skip()
     }
+}
+
+tasks.register('publishCurseForge', TaskPublishCurseForge) {
+    apiToken = System.getenv('CURSEFORGE_TOKEN')
+
+    def mainFile = upload(000000, remapJar)
+    mainFile.changelog = rootProject.file(changelog).getText('UTF-8')
+    mainFile.changelogType = 'markdown'
+    mainFile.releaseType = release_type
+    mainFile.addGameVersion("${minecraft_version}")
+    mainFile.addRequirement("fabric-api")
+    mainFile.addRequirement(cerbons_api)
 }
 
 publishing {
