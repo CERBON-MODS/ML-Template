@@ -101,6 +101,7 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
     apiToken = System.getenv('CURSEFORGE_TOKEN')
 
     def mainFile = upload(000000, jar)
+    mainFile.addModLoader("Forge")
     mainFile.changelog = rootProject.file(changelog).getText('UTF-8')
     mainFile.changelogType = 'markdown'
     mainFile.releaseType = release_type
