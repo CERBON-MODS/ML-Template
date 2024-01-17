@@ -123,7 +123,6 @@ modrinth {
     changelog = rootProject.file(project.changelog).getText('UTF-8')
 
     dependencies {
-        required.project "fabric-api"
         required.project cerbons_api
     }
 }
