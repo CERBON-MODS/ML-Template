@@ -36,6 +36,9 @@ dependencies {
 
     modImplementation "com.cerbon:cerbons_api-forge-${minecraft_version}:${cerbons_api_version}"
 
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}"))
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }
