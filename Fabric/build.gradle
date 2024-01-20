@@ -112,7 +112,7 @@ tasks.register("publishCurseForge", TaskPublishCurseForge) {
     mainFile.changelog = rootProject.file(changelog).getText("UTF-8")
 
     mainFile.addRequirement("fabric-api")
-    mainFile.addRequirement(cerbons_api)
+    mainFile.addRequirement(cerbons_api_slug)
 }
 
 modrinth {
@@ -129,7 +129,7 @@ modrinth {
 
     dependencies {
         required.project "fabric-api"
-        required.project cerbons_api
+        required.project cerbons_api_slug
     }
 }
 
