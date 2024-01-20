@@ -111,8 +111,7 @@ tasks.register("publishCurseForge", TaskPublishCurseForge) {
     mainFile.changelogType = "markdown"
     mainFile.changelog = rootProject.file(changelog).getText("UTF-8")
 
-    mainFile.addRequirement("fabric-api")
-    mainFile.addRequirement(cerbons_api_slug)
+    mainFile.addRequirement(required_dependencies_fabric.replaceAll(" ", "").split(","))
 }
 
 modrinth {
@@ -128,8 +127,7 @@ modrinth {
     changelog = rootProject.file(project.changelog).getText('UTF-8')
 
     dependencies {
-        required.project "fabric-api"
-        required.project cerbons_api_slug
+        required.project required_dependencies_fabric.replaceAll(" ", "").split(",")
     }
 }
 
