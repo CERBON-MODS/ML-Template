@@ -80,3 +80,8 @@ allprojects {
         withSourcesJar()
     }
 }
+
+tasks.register("publishAllCurseforgeAndModrinth", Task) {
+    dependsOn ":forge:publishCurseForgeAndModrinth"
+    dependsOn ":fabric:publishCurseForgeAndModrinth"
+}

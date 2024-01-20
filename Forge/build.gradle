@@ -101,6 +101,11 @@ components.java {
     }
 }
 
+tasks.register("publishCurseForgeAndModrinth", Task) {
+    dependsOn publishCurseForge
+    dependsOn tasks.modrinth
+}
+
 tasks.register("publishCurseForge", TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
 
