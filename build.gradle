@@ -36,35 +36,35 @@ allprojects {
 
     repositories {
         maven {
-            name = "ParchmentMC"
-            url = "https://maven.parchmentmc.org"
+            name "ParchmentMC"
+            url "https://maven.parchmentmc.org"
         }
         maven {
-            name = "CurseMaven"
-            url = "https://cursemaven.com"
+            name "CurseMaven"
+            url "https://cursemaven.com"
             content {
                 includeGroup "curse.maven"
             }
         }
         maven {
-            name = "Progwml6's maven" // JEI
-            url = "https://dvs1.progwml6.com/files/maven/"
+            name "Progwml6's maven" // JEI
+            url "https://dvs1.progwml6.com/files/maven/"
         }
         maven {
-            name = "Jared's maven" // JEI
-            url = "https://maven.blamejared.com/"
+            name "Jared's maven" // JEI
+            url "https://maven.blamejared.com/"
         }
         maven {
-            name = "ModMaven" // JEI
-            url = "https://modmaven.dev"
+            name "ModMaven" // JEI
+            url "https://modmaven.dev"
         }
         maven {
-            name = "ModMenu"
-            url = "https://maven.terraformersmc.com/"
+            name "ModMenu"
+            url "https://maven.terraformersmc.com/"
         }
         maven {
-            name = "Ladysnake Mods"
-            url = "https://maven.ladysnake.org/releases"
+            name "Ladysnake Mods"
+            url "https://maven.ladysnake.org/releases"
         }
         flatDir {
             dir "libs"
