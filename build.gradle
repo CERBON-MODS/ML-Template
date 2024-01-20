@@ -63,7 +63,7 @@ allprojects {
             url "https://maven.terraformersmc.com/"
         }
         maven {
-            name "Ladysnake Mods"
+            name "Ladysnake Mods" // Cardinal Components
             url "https://maven.ladysnake.org/releases"
         }
         flatDir {
