@@ -118,15 +118,15 @@ tasks.register("publishCurseForge", TaskPublishCurseForge) {
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
 
-    versionName = archivesBaseName
-    versionNumber = mod_version
-    versionType = release_type
+    projectId = modrinth_project_id
+    uploadFile = jar
+    loaders = ["forge"]
 
     gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
 
-    loaders = ["forge"]
-    projectId = modrinth_project_id
-    uploadFile = jar
+    versionName = archivesBaseName
+    versionNumber = mod_version
+    versionType = release_type
 
     changelog = rootProject.file(project.changelog).getText('UTF-8')
 
