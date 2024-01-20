@@ -104,7 +104,7 @@ components.java {
 tasks.register("publishCurseForge", TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
 
-    def mainFile = upload(000000, remapJar)
+    def mainFile = upload(curseforge_project_id, remapJar)
     mainFile.addModLoader("Fabric")
     mainFile.addGameVersion(game_versions.replaceAll(" ", "").split(","))
 
@@ -125,9 +125,9 @@ modrinth {
     gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
 
     loaders = ["fabric"]
-    projectId = "ABCDEFGH"
+    projectId = modrinth_project_id
     uploadFile = remapJar
-    
+
     changelog = rootProject.file(project.changelog).getText('UTF-8')
 
     dependencies {

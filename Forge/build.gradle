@@ -104,7 +104,7 @@ components.java {
 tasks.register("publishCurseForge", TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
 
-    def mainFile = upload(000000, jar)
+    def mainFile = upload(curseforge_project_id, jar)
     mainFile.addModLoader("Forge")
     mainFile.addGameVersion(game_versions.replaceAll(" ", "").split(","))
 
@@ -125,7 +125,7 @@ modrinth {
     gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
 
     loaders = ["forge"]
-    projectId = "ABCDEFGH"
+    projectId = modrinth_project_id
     uploadFile = jar
 
     changelog = rootProject.file(project.changelog).getText('UTF-8')
