@@ -4,14 +4,14 @@ license="${mod_license}"
 issueTrackerURL="${issues_url}"
 
 [[mods]]
-modId="${mod_id}"
-version="${mod_version}"
-displayName="${mod_name}"
-displayURL="${curseforge_url}"
-logoFile="${logo_file}"
-#credits="Thanks for this example mod goes to Java"
-authors="${mod_authors}"
-description='''${mod_description}'''
+   modId="${mod_id}"
+   version="${mod_version}"
+   displayName="${mod_name}"
+   displayURL="${curseforge_url}"
+   logoFile="${logo_file}"
+   #credits="Thanks for this example mod goes to Java"
+   authors="${mod_authors}"
+   description='''${mod_description}'''
 
 [[dependencies.${mod_id}]]
    modId="forge"
