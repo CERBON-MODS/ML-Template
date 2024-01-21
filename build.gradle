@@ -47,6 +47,10 @@ allprojects {
             }
         }
         maven {
+            name "NeoForge"
+            url "https://maven.neoforged.net/releases/"
+        }
+        maven {
             name "Jared's maven" // JEI
             url "https://maven.blamejared.com/"
         }
@@ -80,4 +84,5 @@ allprojects {
 tasks.register("publishAllCurseforgeAndModrinth", Task) {
     dependsOn ":forge:publishCurseForgeAndModrinth"
     dependsOn ":fabric:publishCurseForgeAndModrinth"
+    dependsOn ":neoforge:publishCurseForgeAndModrinth"
 }
