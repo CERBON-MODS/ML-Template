@@ -103,7 +103,7 @@ tasks.register("publishCurseForgeAndModrinth", Task) {
 tasks.register("publishCurseForge", TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
 
-    def mainFile = upload(curseforge_project_id, jar)
+    def mainFile = upload(curseforge_project_id, remapJar)
     mainFile.addModLoader("NeoForge")
     mainFile.addGameVersion(game_versions.replaceAll(" ", "").split(","))
 
@@ -118,12 +118,12 @@ modrinth {
     token = System.getenv("MODRINTH_TOKEN")
 
     projectId = modrinth_project_id
-    uploadFile = jar
+    uploadFile = remapJar
     loaders = ["neoforge"]
 
     gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
 
-    versionName = archivesBaseName
+    versionName = archivesBaseName + "-" + mod_version
     versionNumber = mod_version
     versionType = release_type
 
