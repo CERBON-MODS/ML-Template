@@ -34,7 +34,7 @@ dependencies {
 
     // Useful Mods
     modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"
-    modRuntimeOnly "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
+    modRuntimeOnly ("mezz.jei:jei-${minecraft_version}-forge:${jei_version}") { transitive false }
 
     modImplementation "curse.maven:jade-324717:${jade_version_forge}"
 
