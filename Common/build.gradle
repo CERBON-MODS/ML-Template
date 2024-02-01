@@ -12,6 +12,10 @@ architectury {
     common("forge", "fabric", "neoforge")
 }
 
+base {
+    archivesBaseName = archives_base_name + "-Common-${minecraft_version}"
+}
+
 publishing {
     publications {
         mavenCommon(MavenPublication) {
