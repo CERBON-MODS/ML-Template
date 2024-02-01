@@ -9,8 +9,10 @@
 
 /Fabric/.gradle/
 /Fabric/build/
-/Fabric/run
+/Fabric/run/*
+!/Fabric/run/options.txt
 
 /Forge/.gradle/
 /Forge/build/
-/Forge/run
+/Forge/run/*
+!/Forge/run/options.txt
