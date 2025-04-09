@@ -22,9 +22,6 @@ dependencies {
 
     // Mod Dependencies
     modImplementation "com.cerbon:cerbons_api-neoforge-${minecraft_version}:${cerbons_api_version}"
-
-    // All Projects Dependencies
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
     implementation(include("io.github.llamalad7:mixinextras-neoforge:${mixin_extras_version}"))
 
     // Useful Mods
