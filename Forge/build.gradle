@@ -154,17 +154,3 @@ modrinth {
         required.project required_dependencies_forge.replaceAll(" ", "").split(",")
     }
 }
-
-publishing {
-    publications {
-        mavenForge(MavenPublication) {
-            artifactId = archives_base_name + "-" + project.name
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-
-    }
-}
