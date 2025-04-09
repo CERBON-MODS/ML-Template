@@ -25,13 +25,15 @@ loom {
 dependencies {
     forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    // Mod Dependencies
+    // Forge Dependencies
     modImplementation "com.cerbon:cerbons_api-forge-${minecraft_version}:${cerbons_api_version}"
-    implementation(include("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}"))
+
+    implementation include("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}")
 
     // Useful Mods
     modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"
     modRuntimeOnly ("mezz.jei:jei-${minecraft_version}-forge:${jei_version}") { transitive false }
+
     //modImplementation "curse.maven:jade-324717:${jade_version_forge}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
