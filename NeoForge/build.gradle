@@ -23,15 +23,14 @@ dependencies {
     // Mod Dependencies
     modImplementation "com.cerbon:cerbons_api-neoforge-${minecraft_version}:${cerbons_api_version}"
 
-    // Useful Mods
-    modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
-    modRuntimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
-
-    modImplementation "curse.maven:jade-324717:${jade_version_neo}"
-
     // All Projects Dependencies
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
     implementation(include("io.github.llamalad7:mixinextras-neoforge:${mixin_extras_version}"))
+
+    // Useful Mods
+    modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    modRuntimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+    modImplementation "curse.maven:jade-324717:${jade_version_neo}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
