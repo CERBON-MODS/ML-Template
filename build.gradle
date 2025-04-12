@@ -1,3 +1,5 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 plugins {
     id "architectury-plugin" version "${architecture_plugin_version}"
     id "dev.architectury.loom" version "${loom_version}" apply false
@@ -13,8 +15,6 @@ architectury {
 subprojects {
     apply plugin: "dev.architectury.loom"
     apply plugin: "com.github.johnrengelman.shadow"
-    apply plugin: "net.darkhax.curseforgegradle"
-    apply plugin: "com.modrinth.minotaur"
 
     loom {
         silentMojangMappingsLicense()
@@ -31,6 +31,67 @@ subprojects {
         compileOnly annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}")
 
         modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    }
+
+    tasks.register("curseForgeAndModrinth", Task) {
+        group = "publishing"
+        description = "Upload project to CurseForge and Modrinth"
+
+        if (!project.name.equalsIgnoreCase("common")) {
+            dependsOn curseForge
+            dependsOn tasks.modrinth
+        }
+    }
+
+    tasks.register("curseForge", TaskPublishCurseForge) {
+        group = "publishing"
+        description = "Upload project to CurseForge"
+
+        apiToken = System.getenv("CURSEFORGE_TOKEN")
+
+        def mainFile = upload(curseforge_project_id, remapJar)
+        mainFile.addModLoader(project.name)
+        mainFile.addGameVersion(game_versions.replaceAll(" ", "").split(","))
+
+        mainFile.releaseType = release_type
+        mainFile.changelogType = changelog_type
+        mainFile.changelog = rootProject.file(changelog).getText("UTF-8")
+
+        if (project.name.equalsIgnoreCase("fabric"))
+            mainFile.addRequirement(required_dependencies_fabric.replaceAll(" ", "").split(","))
+
+        else if (project.name.equalsIgnoreCase("forge"))
+            mainFile.addRequirement(required_dependencies_forge.replaceAll(" ", "").split(","))
+
+        else if (project.name.equalsIgnoreCase("neoforge"))
+            mainFile.addRequirement(required_dependencies_neo.replaceAll(" ", "").split(","))
+    }
+
+    modrinth {
+        token = System.getenv("MODRINTH_TOKEN")
+
+        projectId = modrinth_project_id
+        uploadFile = remapJar
+        loaders = [project.name]
+
+        gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
+
+        versionName = project.base.archivesBaseName + "-" + mod_version
+        versionNumber = mod_version
+        versionType = release_type
+
+        changelog = rootProject.file(project.changelog).getText('UTF-8')
+
+        dependencies {
+            if (project.name.equalsIgnoreCase("fabric"))
+                required.project required_dependencies_fabric.replaceAll(" ", "").split(",")
+
+            else if (project.name.equalsIgnoreCase("forge"))
+                required.project required_dependencies_forge.replaceAll(" ", "").split(",")
+
+            else if (project.name.equalsIgnoreCase("neoforge"))
+                required.project required_dependencies_neo.replaceAll(" ", "").split(",")
+        }
     }
 }
 
@@ -86,10 +147,4 @@ allprojects {
     java {
         withSourcesJar()
     }
-}
-
-tasks.register("publishAllCurseforgeAndModrinth", Task) {
-    dependsOn ":forge:publishCurseForgeAndModrinth"
-    dependsOn ":fabric:publishCurseForgeAndModrinth"
-    dependsOn ":neoforge:publishCurseForgeAndModrinth"
 }

@@ -1,5 +1,3 @@
-import net.darkhax.curseforgegradle.TaskPublishCurseForge
-
 architectury {
     platformSetupLoomIde()
     fabric()
@@ -100,44 +98,5 @@ sourcesJar {
 components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
         skip()
-    }
-}
-
-tasks.register("publishCurseForgeAndModrinth", Task) {
-    dependsOn publishCurseForge
-    dependsOn tasks.modrinth
-}
-
-tasks.register("publishCurseForge", TaskPublishCurseForge) {
-    apiToken = System.getenv("CURSEFORGE_TOKEN")
-
-    def mainFile = upload(curseforge_project_id, remapJar)
-    mainFile.addModLoader("Fabric")
-    mainFile.addGameVersion(game_versions.replaceAll(" ", "").split(","))
-
-    mainFile.releaseType = release_type
-    mainFile.changelogType = changelog_type
-    mainFile.changelog = rootProject.file(changelog).getText("UTF-8")
-
-    mainFile.addRequirement(required_dependencies_fabric.replaceAll(" ", "").split(","))
-}
-
-modrinth {
-    token = System.getenv("MODRINTH_TOKEN")
-
-    projectId = modrinth_project_id
-    uploadFile = remapJar
-    loaders = ["fabric"]
-
-    gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
-
-    versionName = archivesBaseName + "-" + mod_version
-    versionNumber = mod_version
-    versionType = release_type
-
-    changelog = rootProject.file(project.changelog).getText('UTF-8')
-
-    dependencies {
-        required.project required_dependencies_fabric.replaceAll(" ", "").split(",")
     }
 }
