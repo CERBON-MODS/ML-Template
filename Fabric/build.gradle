@@ -44,29 +44,6 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }
 
-processResources {
-    var replaceProperties = [
-            minecraft_version_range          : minecraft_version_range_fabric,
-            fabric_loader_version_range      : fabric_loader_version_range,
-            mod_id                           : mod_id,
-            mod_name                         : mod_name,
-            mod_license                      : mod_license,
-            mod_version                      : mod_version,
-            mod_authors                      : mod_authors,
-            mod_description                  : mod_description,
-            source_code_url                  : source_code_url,
-            issues_url                       : issues_url,
-            curseforge_url                   : curseforge_url,
-            logo_file                        : logo_file,
-            cerbons_api_version_range_fabric : cerbons_api_version_range_fabric
-    ]
-    inputs.properties replaceProperties
-
-    filesMatching("fabric.mod.json") {
-        expand replaceProperties + [project: project]
-    }
-}
-
 base {
     archivesBaseName = archives_base_name + "-Fabric-${minecraft_version}"
 }

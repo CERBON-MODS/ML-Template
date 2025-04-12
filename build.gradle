@@ -33,6 +33,60 @@ subprojects {
         modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     }
 
+    processResources {
+        if (project.name.equalsIgnoreCase("common")) return
+
+        def commonProperties = [
+                mod_id: mod_id,
+                mod_name: mod_name,
+                mod_license: mod_license,
+                mod_version: mod_version,
+                mod_authors: mod_authors,
+                mod_description: mod_description,
+                issues_url: issues_url,
+                curseforge_url: curseforge_url,
+                logo_file: logo_file
+        ]
+
+        def extraProperties = [:]
+        def filePatterns = []
+
+        if (project.name.equalsIgnoreCase("fabric")) {
+            extraProperties = [
+                    minecraft_version_range: minecraft_version_range_fabric,
+                    fabric_loader_version_range: fabric_loader_version_range,
+                    cerbons_api_version_range_fabric: cerbons_api_version_range_fabric,
+                    source_code_url: source_code_url
+            ]
+            filePatterns = ["fabric.mod.json"]
+
+        } else if (project.name.equalsIgnoreCase("forge")) {
+            extraProperties = [
+                    minecraft_version_range: minecraft_version_range_forge,
+                    forge_version_range: forge_version_range,
+                    forge_loader_version_range: forge_loader_version_range,
+                    cerbons_api_version_range_forge: cerbons_api_version_range_forge
+            ]
+            filePatterns = ["META-INF/mods.toml", "pack.mcmeta"]
+
+        } else if (project.name.equalsIgnoreCase("neoforge")) {
+            extraProperties = [
+                    minecraft_version_range: minecraft_version_range_forge,
+                    neo_version_range: neo_version_range,
+                    neo_loader_version_range: neo_loader_version_range,
+                    cerbons_api_version_range_forge: cerbons_api_version_range_forge
+            ]
+            filePatterns = ["META-INF/neoforge.mods.toml", "pack.mcmeta"]
+        }
+
+        def replaceProperties = commonProperties + extraProperties
+        inputs.properties replaceProperties
+
+        filesMatching(filePatterns) {
+            expand replaceProperties + [project: project]
+        }
+    }
+
     tasks.register("curseForgeAndModrinth", Task) {
         group = "publishing"
         description = "Upload project to CurseForge and Modrinth"
