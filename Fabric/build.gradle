@@ -40,6 +40,7 @@ dependencies {
         exclude module: "fabric-api"
     }
 
+    // Architecture
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }

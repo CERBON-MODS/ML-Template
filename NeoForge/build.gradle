@@ -29,6 +29,7 @@ dependencies {
 
     modImplementation "curse.maven:jade-324717:${jade_version_neo}"
 
+    // Architecture
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 }
