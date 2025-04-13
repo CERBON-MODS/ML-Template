@@ -123,13 +123,43 @@ def configure_fabric(mod_id: str, mod_name: str):
     mod_name_file.rename(code_dir / f"{mod_name}Fabric.java")
 
 
-def configure_forge():
-    pass
+def configure_forge(mod_id: str, mod_name: str):
+    print(f"Configuring {Project.FORGE} project")
+
+    # Code Update
+    code_dir = rename_folder_structure(Project.FORGE, mod_id) / 'forge'
+    update_java_file(code_dir / "ModNameForge.java", mod_id, mod_name)
+    update_java_file(code_dir / "mixin/test/TestMixin.java", mod_id, mod_name)
+
+    # Resources update
+    resources_dir = get_common_resources_path(Project.FORGE)
+    update_mixin(Project.FORGE, mod_id, resources_dir)
+
+    mod_name_file = code_dir / "ModNameForge.java"
+    mod_name_file.rename(code_dir / f"{mod_name}Forge.java")
 
 
-def configure_neoforge():
-    pass
+def configure_neoforge(mod_id: str, mod_name: str):
+    print(f"Configuring {Project.NEOFORGE} project")
+
+    # Code Update
+    code_dir = rename_folder_structure(Project.NEOFORGE, mod_id) / 'neoforge'
+    update_java_file(code_dir / "ModNameNeo.java", mod_id, mod_name)
+    update_java_file(code_dir / "mixin/test/TestMixin.java", mod_id, mod_name)
+
+    # Resources update
+    resources_dir = get_common_resources_path(Project.NEOFORGE)
+    update_mixin(Project.NEOFORGE, mod_id, resources_dir)
+
+    mod_name_file = code_dir / "ModNameNeo.java"
+    mod_name_file.rename(code_dir / f"{mod_name}Neo.java")
 
 
 if __name__ == "__main__":
-    configure_fabric("bclib", "Bclib")
+    mod_id = "bclib"
+    mod_name = "Bclib"
+
+    configure_common(mod_id, mod_name)
+    configure_fabric(mod_id, mod_name)
+    configure_forge(mod_id, mod_name)
+    configure_neoforge(mod_id, mod_name)
