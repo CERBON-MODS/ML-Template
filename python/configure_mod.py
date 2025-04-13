@@ -50,7 +50,7 @@ def update_mixin(project: Project, mod_id: str, resources_dir: Path):
         f.truncate()
         print(f"Updated mixin file from {project} project")
 
-    mixin_renamed = resources_dir / f"{mod_id}-common.mixins.json" if project == Project.COMMON else f"{mod_id}.mixins.json"
+    mixin_renamed = resources_dir / f"{mod_id}-common.mixins.json" if project == Project.COMMON else resources_dir / f"{mod_id}.mixins.json"
 
     mixin.rename(mixin_renamed)
     print(f"Renamed mixin file from {project} project to {mixin_renamed}")
@@ -100,8 +100,27 @@ def configure_common(mod_id: str, mod_name: str):
         print(f"Error configuring {Project.COMMON} project: {e}")
 
 
-def configure_fabric():
-    pass
+def configure_fabric(mod_id: str, mod_name: str):
+    print(f"Configuring {Project.FABRIC} project")
+
+    # Code Update
+    code_dir = rename_folder_structure(Project.FABRIC, mod_id) / 'fabric'
+    updated_java_file(code_dir / "ModNameFabric.java", mod_id, mod_name)
+    updated_java_file(code_dir / "mixin/test/TestMixin.java", mod_id, mod_name)
+
+    # Resources update
+    resources_dir = get_common_resources_path(Project.FABRIC)
+    update_mixin(Project.FABRIC, mod_id, resources_dir)
+    with open(resources_dir / "fabric.mod.json", "r+") as f:
+        fabric_mod_file = f.read()
+        fabric_mod_file = fabric_mod_file.replace("ml_template", mod_id)
+        fabric_mod_file = fabric_mod_file.replace("ModName", mod_name)
+        f.seek(0)
+        f.write(fabric_mod_file)
+        f.truncate()
+
+    mod_name_file = code_dir / "ModNameFabric.java"
+    mod_name_file.rename(code_dir / f"{mod_name}Fabric.java")
 
 
 def configure_forge():
@@ -113,4 +132,4 @@ def configure_neoforge():
 
 
 if __name__ == "__main__":
-    configure_common("bclib", "Bclib")
+    configure_fabric("bclib", "Bclib")
