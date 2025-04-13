@@ -47,10 +47,6 @@ def update_file(file_path: Path, mod_id: str, mod_name: str):
 
 
 def update_mixin(project: Project, mod_id: str, mod_name: str, resources_dir: Path):
-    """
-    Updates the mixin file by performing the text replacements via update_file,
-    then renames it appropriately.
-    """
     if project == Project.COMMON:
         mixin = resources_dir / "ml_template-common.mixins.json"
     else:
