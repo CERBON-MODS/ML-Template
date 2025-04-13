@@ -56,7 +56,7 @@ def update_mixin(project: Project, mod_id: str, resources_dir: Path):
     print(f"Renamed mixin file from {project} project to {mixin_renamed}")
 
 
-def updated_java_file(java_path: Path, mod_id: str, mod_name: str):
+def update_java_file(java_path: Path, mod_id: str, mod_name: str):
     with open(java_path, "r+") as f:
         java_code = f.read()
         java_code = java_code.replace("ml_template", mod_id)
@@ -73,9 +73,9 @@ def configure_common(mod_id: str, mod_name: str):
 
         # Code Update
         code_dir = rename_folder_structure(Project.COMMON, mod_id)
-        updated_java_file(code_dir / "ModName.java", mod_id, mod_name)
-        updated_java_file(code_dir / "platform/Services.java", mod_id, mod_name)
-        updated_java_file(code_dir / "mixin/test/TestMixin.java", mod_id, mod_name)
+        update_java_file(code_dir / "ModName.java", mod_id, mod_name)
+        update_java_file(code_dir / "platform/Services.java", mod_id, mod_name)
+        update_java_file(code_dir / "mixin/test/TestMixin.java", mod_id, mod_name)
 
         mod_name_file = code_dir / "ModName.java"
         mod_name_file.rename(code_dir / f"{mod_name}.java")
@@ -105,8 +105,8 @@ def configure_fabric(mod_id: str, mod_name: str):
 
     # Code Update
     code_dir = rename_folder_structure(Project.FABRIC, mod_id) / 'fabric'
-    updated_java_file(code_dir / "ModNameFabric.java", mod_id, mod_name)
-    updated_java_file(code_dir / "mixin/test/TestMixin.java", mod_id, mod_name)
+    update_java_file(code_dir / "ModNameFabric.java", mod_id, mod_name)
+    update_java_file(code_dir / "mixin/test/TestMixin.java", mod_id, mod_name)
 
     # Resources update
     resources_dir = get_common_resources_path(Project.FABRIC)
