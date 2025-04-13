@@ -56,13 +56,32 @@ def update_mixin(project: Project, mod_id: str, resources_dir: Path):
     print(f"Renamed mixin file from {project} project to {mixin_renamed}")
 
 
-def configure_common(mod_id: str):
+def updated_java_file(java_path: Path, mod_id: str, mod_name: str):
+    with open(java_path, "r+") as f:
+        java_code = f.read()
+        java_code = java_code.replace("ml_template", mod_id)
+        java_code = java_code.replace("ModName", mod_name)
+        java_code = java_code.replace("ML Template", mod_name)
+        f.seek(0)
+        f.write(java_code)
+        f.truncate()
+
+
+def configure_common(mod_id: str, mod_name: str):
     try:
         print(f"Configuring {Project.COMMON} project")
 
-        #code_dir = rename_folder_structure(project_name, mod_id)
-        resources_dir = get_common_resources_path(Project.COMMON)
+        # Code Update
+        code_dir = rename_folder_structure(Project.COMMON, mod_id)
+        updated_java_file(code_dir / "ModName.java", mod_id, mod_name)
+        updated_java_file(code_dir / "platform/Services.java", mod_id, mod_name)
+        updated_java_file(code_dir / "mixin/test/TestMixin.java", mod_id, mod_name)
 
+        mod_name_file = code_dir / "ModName.java"
+        mod_name_file.rename(code_dir / f"{mod_name}.java")
+
+        # Resources Update
+        resources_dir = get_common_resources_path(Project.COMMON)
         with open(resources_dir / "architectury.common.json", "r+") as f:
             architecture_json = json.load(f)
             architecture_json["accessWidener"] = f"{mod_id}.accesswidener"
@@ -94,4 +113,4 @@ def configure_neoforge():
 
 
 if __name__ == "__main__":
-    configure_common("bclib")
+    configure_common("bclib", "Bclib")
