@@ -27,6 +27,7 @@ def rename_folder_structure(project: Project, mod_id: str) -> Path:
         code_path = get_common_code_path(project)
         ml_template_folder = code_path / "ml_template"
         return ml_template_folder.rename(code_path / mod_id)
+
     except Exception as e:
         print(f"Error trying to rename folder structure for project {project} with mod id {mod_id}: {e}")
 
@@ -41,7 +42,9 @@ def update_file(file_path: Path, mod_id: str, mod_name: str):
             f.seek(0)
             f.write(content)
             f.truncate()
-        print(f"Updated file: {file_path}")
+        # Print only the file name in the updated file message.
+        print(f"Updated file: {file_path.name}")
+
     except Exception as e:
         print(f"Error updating file {file_path}: {e}")
 
@@ -61,7 +64,8 @@ def update_mixin(project: Project, mod_id: str, mod_name: str, resources_dir: Pa
 
     try:
         mixin.rename(mixin_renamed)
-        print(f"Renamed mixin file for {project} project to {mixin_renamed}")
+        # Print the rename operation with only file names.
+        print(f"Renamed file: from {mixin.name} to {mixin_renamed.name}")
     except Exception as e:
         print(f"Error renaming mixin file for {project} project: {e}")
 
@@ -76,20 +80,21 @@ def configure_common(mod_id: str, mod_name: str):
         update_file(code_dir / "platform/Services.java", mod_id, mod_name)
         update_file(code_dir / "mixin/test/TestMixin.java", mod_id, mod_name)
 
-        # Rename main java file
         mod_name_file = code_dir / "ModName.java"
-        mod_name_file.rename(code_dir / f"{mod_name}.java")
+        mod_name_file_renamed = mod_name_file.rename(code_dir / f"{mod_name}.java")
+        print(f"Renamed file: from {mod_name_file.name} to {mod_name_file_renamed.name}")
 
         # Resources Update
         resources_dir = get_common_resources_path(Project.COMMON)
         update_file(resources_dir / "architectury.common.json", mod_id, mod_name)
-        print("Updated architectury.common.json file")
 
         ml_template_accesswidener_file = resources_dir / "ml_template.accesswidener"
-        ml_template_accesswidener_file.rename(resources_dir / f"{mod_id}.accesswidener")
-        print("Renamed accesswidener")
+        new_accesswidener_file = resources_dir / f"{mod_id}.accesswidener"
+        ml_template_accesswidener_file.rename(new_accesswidener_file)
+        print(f"Renamed file: from {ml_template_accesswidener_file.name} to {new_accesswidener_file.name}")
 
         update_mixin(Project.COMMON, mod_id, mod_name, resources_dir)
+        print()
 
     except Exception as e:
         print(f"Error configuring {Project.COMMON} project: {e}")
@@ -104,14 +109,15 @@ def configure_fabric(mod_id: str, mod_name: str):
         update_file(code_dir / "ModNameFabric.java", mod_id, mod_name)
         update_file(code_dir / "mixin/test/TestMixin.java", mod_id, mod_name)
 
+        mod_name_file = code_dir / "ModNameFabric.java"
+        mod_name_file_renamed = mod_name_file.rename(code_dir / f"{mod_name}Fabric.java")
+        print(f"Renamed file: from {mod_name_file.name} to {mod_name_file_renamed.name}")
+
         # Resources update
         resources_dir = get_common_resources_path(Project.FABRIC)
         update_mixin(Project.FABRIC, mod_id, mod_name, resources_dir)
         update_file(resources_dir / "fabric.mod.json", mod_id, mod_name)
-
-        # Rename main java file
-        mod_name_file = code_dir / "ModNameFabric.java"
-        mod_name_file.rename(code_dir / f"{mod_name}Fabric.java")
+        print()
 
     except Exception as e:
         print(f"Error configuring {Project.FABRIC} project: {e}")
@@ -126,13 +132,14 @@ def configure_forge(mod_id: str, mod_name: str):
         update_file(code_dir / "ModNameForge.java", mod_id, mod_name)
         update_file(code_dir / "mixin/test/TestMixin.java", mod_id, mod_name)
 
+        mod_name_file = code_dir / "ModNameForge.java"
+        mod_name_file_renamed = mod_name_file.rename(code_dir / f"{mod_name}Forge.java")
+        print(f"Renamed file: from {mod_name_file.name} to {mod_name_file_renamed.name}")
+
         # Resources update
         resources_dir = get_common_resources_path(Project.FORGE)
         update_mixin(Project.FORGE, mod_id, mod_name, resources_dir)
-
-        # Rename main java file
-        mod_name_file = code_dir / "ModNameForge.java"
-        mod_name_file.rename(code_dir / f"{mod_name}Forge.java")
+        print()
 
     except Exception as e:
         print(f"Error configuring {Project.FORGE} project: {e}")
@@ -147,13 +154,14 @@ def configure_neoforge(mod_id: str, mod_name: str):
         update_file(code_dir / "ModNameNeo.java", mod_id, mod_name)
         update_file(code_dir / "mixin/test/TestMixin.java", mod_id, mod_name)
 
+        mod_name_file = code_dir / "ModNameNeo.java"
+        mod_name_file_renamed = mod_name_file.rename(code_dir / f"{mod_name}Neo.java")
+        print(f"Renamed file: from {mod_name_file.name} to {mod_name_file_renamed.name}")
+
         # Resources update
         resources_dir = get_common_resources_path(Project.NEOFORGE)
         update_mixin(Project.NEOFORGE, mod_id, mod_name, resources_dir)
-
-        # Rename main java file
-        mod_name_file = code_dir / "ModNameNeo.java"
-        mod_name_file.rename(code_dir / f"{mod_name}Neo.java")
+        print()
 
     except Exception as e:
         print(f"Error configuring {Project.NEOFORGE} project: {e}")
