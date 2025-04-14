@@ -45,10 +45,6 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }
 
-base {
-    archivesBaseName = archives_base_name + "-Fabric-${minecraft_version}"
-}
-
 shadowJar {
     exclude "architectury.common.json"
 

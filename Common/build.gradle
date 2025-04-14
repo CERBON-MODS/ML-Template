@@ -12,10 +12,16 @@ architectury {
     common("forge", "fabric", "neoforge")
 }
 
-base {
-    archivesBaseName = archives_base_name + "-Common-${minecraft_version}"
-}
-
 loom {
     accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
+}
+
+sourcesJar {
+    exclude "architectury.common.json"
+}
+
+remapJar {
+    inputFile.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier.set(null)
 }

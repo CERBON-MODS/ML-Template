@@ -16,6 +16,10 @@ subprojects {
     apply plugin: "dev.architectury.loom"
     apply plugin: "com.github.johnrengelman.shadow"
 
+    base {
+        archivesBaseName = archives_base_name + "-${projectDir.canonicalFile.name}-${minecraft_version}"
+    }
+
     loom {
         silentMojangMappingsLicense()
     }

@@ -39,10 +39,6 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }
 
-base {
-    archivesBaseName = archives_base_name + "-Forge-${minecraft_version}"
-}
-
 shadowJar {
     exclude "fabric.mod.json"
     exclude "architectury.common.json"

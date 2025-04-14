@@ -45,10 +45,6 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 }
 
-base {
-    archivesBaseName = archives_base_name + "-NeoForge-${minecraft_version}"
-}
-
 shadowJar {
     exclude "fabric.mod.json"
     exclude "architectury.common.json"
