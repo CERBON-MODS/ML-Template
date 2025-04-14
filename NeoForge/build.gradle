@@ -13,6 +13,17 @@ configurations {
 
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
+
+    neoForge {
+        runs {
+            data {
+                data()
+                programArgs("--all", "--mod", mod_id as String)
+                programArgs("--existing", project(":common").file("src/main/resources").absolutePath)
+                programArgs("--output", project(":common").file("src/main/generated").absolutePath)
+            }
+        }
+    }
 }
 
 dependencies {

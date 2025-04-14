@@ -33,6 +33,8 @@ subprojects {
         modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     }
 
+    sourceSets.main.resources { srcDir 'src/main/generated' }
+
     processResources {
         if (project.name.equalsIgnoreCase("common")) return
 
