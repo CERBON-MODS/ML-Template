@@ -9,27 +9,19 @@ dependencies {
 }
 
 architectury {
-    common("fabric", "forge")
-}
-
-base {
-    archivesBaseName = archives_base_name + "-Common-${minecraft_version}"
+    common("forge", "fabric", "neoforge")
 }
 
 loom {
     accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
 }
 
-publishing {
-    publications {
-        mavenCommon(MavenPublication) {
-            artifactId = archives_base_name
-            from components.java
-        }
-    }
+sourcesJar {
+    exclude "architectury.common.json"
+}
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-
-    }
+remapJar {
+    inputFile.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier.set(null)
 }

@@ -1,6 +1,6 @@
 package com.cerbon.ml_template.platform;
 
-import com.cerbon.ml_template.util.ModConstants;
+import com.cerbon.ml_template.ModName;
 
 import java.util.ServiceLoader;
 
@@ -10,7 +10,7 @@ public class Services {
         final T loadedService = ServiceLoader.load(clazz)
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("Failed to load service for " + clazz.getName()));
-        ModConstants.LOGGER.debug("Loaded {} for service {}", loadedService, clazz);
+        ModName.LOGGER.debug("Loaded {} for service {}", loadedService, clazz);
         return loadedService;
     }
 }

@@ -1,6 +1,11 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.1-SNAPSHOT" apply false
+    id "architectury-plugin" version "${architecture_plugin_version}"
+    id "dev.architectury.loom" version "${loom_version}" apply false
+    id "com.github.johnrengelman.shadow" version "${shadow_plugin_version}"
+    id 'net.darkhax.curseforgegradle' version "${curseforge_gradle_version}"
+    id "com.modrinth.minotaur" version "${minotaur_version}"
 }
 
 architectury {
@@ -9,6 +14,11 @@ architectury {
 
 subprojects {
     apply plugin: "dev.architectury.loom"
+    apply plugin: "com.github.johnrengelman.shadow"
+
+    base {
+        archivesBaseName = archives_base_name + "-${projectDir.canonicalFile.name}-${minecraft_version}"
+    }
 
     loom {
         silentMojangMappingsLicense()
@@ -17,11 +27,130 @@ subprojects {
     dependencies {
         minecraft "com.mojang:minecraft:${minecraft_version}"
 
-        modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
-
         mappings loom.layered() {
             officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-${mapping_version}@zip")
+            parchment "org.parchmentmc.data:parchment-${mapping_version}@zip"
+        }
+
+        compileOnly annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}")
+
+        modCompileOnlyApi "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    }
+
+    sourceSets.main.resources { srcDir 'src/main/generated' }
+
+    processResources {
+        if (project.name.equalsIgnoreCase("common")) return
+
+        def commonProperties = [
+                mod_id: mod_id,
+                mod_name: mod_name,
+                mod_license: mod_license,
+                mod_version: mod_version,
+                mod_authors: mod_authors,
+                mod_description: mod_description,
+                issues_url: issues_url,
+                curseforge_url: curseforge_url,
+                logo_file: logo_file
+        ]
+
+        def extraProperties = [:]
+        def filePatterns = []
+
+        if (project.name.equalsIgnoreCase("fabric")) {
+            extraProperties = [
+                    minecraft_version_range: minecraft_version_range_fabric,
+                    fabric_loader_version_range: fabric_loader_version_range,
+                    cerbons_api_version_range_fabric: cerbons_api_version_range_fabric,
+                    source_code_url: source_code_url
+            ]
+            filePatterns = ["fabric.mod.json"]
+
+        } else if (project.name.equalsIgnoreCase("forge")) {
+            extraProperties = [
+                    minecraft_version_range: minecraft_version_range_forge,
+                    forge_version_range: forge_version_range,
+                    forge_loader_version_range: forge_loader_version_range,
+                    cerbons_api_version_range_forge: cerbons_api_version_range_forge
+            ]
+            filePatterns = ["META-INF/mods.toml", "pack.mcmeta"]
+
+        } else if (project.name.equalsIgnoreCase("neoforge")) {
+            extraProperties = [
+                    minecraft_version_range: minecraft_version_range_forge,
+                    neo_version_range: neo_version_range,
+                    neo_loader_version_range: neo_loader_version_range,
+                    cerbons_api_version_range_forge: cerbons_api_version_range_forge
+            ]
+            filePatterns = ["META-INF/neoforge.mods.toml", "pack.mcmeta"]
+        }
+
+        def replaceProperties = commonProperties + extraProperties
+        inputs.properties replaceProperties
+
+        filesMatching(filePatterns) {
+            expand replaceProperties + [project: project]
+        }
+    }
+
+    tasks.register("curseForgeAndModrinth", Task) {
+        group = "publishing"
+        description = "Upload project to CurseForge and Modrinth"
+
+        if (!project.name.equalsIgnoreCase("common")) {
+            dependsOn curseForge
+            dependsOn tasks.modrinth
+        }
+    }
+
+    tasks.register("curseForge", TaskPublishCurseForge) {
+        group = "publishing"
+        description = "Upload project to CurseForge"
+
+        apiToken = System.getenv("CURSEFORGE_TOKEN")
+
+        def mainFile = upload(curseforge_project_id, remapJar)
+        mainFile.addModLoader(project.name)
+        mainFile.addGameVersion(game_versions.replaceAll(" ", "").split(","))
+
+        mainFile.releaseType = release_type
+        mainFile.changelogType = changelog_type
+        mainFile.changelog = rootProject.file(changelog).getText("UTF-8")
+
+        if (project.name.equalsIgnoreCase("fabric"))
+            mainFile.addRequirement(required_dependencies_fabric.replaceAll(" ", "").split(","))
+
+        else if (project.name.equalsIgnoreCase("forge"))
+            mainFile.addRequirement(required_dependencies_forge.replaceAll(" ", "").split(","))
+
+        else if (project.name.equalsIgnoreCase("neoforge"))
+            mainFile.addRequirement(required_dependencies_neo.replaceAll(" ", "").split(","))
+    }
+
+    modrinth {
+        token = System.getenv("MODRINTH_TOKEN")
+
+        projectId = modrinth_project_id
+        uploadFile = remapJar
+        loaders = [project.name]
+
+        gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
+
+        versionName = project.base.archivesBaseName + "-" + mod_version
+        versionNumber = mod_version
+        versionType = release_type
+
+        changelog = rootProject.file(project.changelog).getText('UTF-8')
+
+        dependencies {
+            if (project.name.equalsIgnoreCase("fabric"))
+                required.project required_dependencies_fabric.replaceAll(" ", "").split(",")
+
+            else if (project.name.equalsIgnoreCase("forge"))
+                required.project required_dependencies_forge.replaceAll(" ", "").split(",")
+
+            else if (project.name.equalsIgnoreCase("neoforge"))
+                required.project required_dependencies_neo.replaceAll(" ", "").split(",")
         }
     }
 }
@@ -29,7 +158,6 @@ subprojects {
 allprojects {
     apply plugin: "java"
     apply plugin: "architectury-plugin"
-    apply plugin: "maven-publish"
 
     version = mod_version
     group = maven_group
@@ -47,8 +175,8 @@ allprojects {
             }
         }
         maven {
-            name "Progwml6's maven" // JEI
-            url "https://dvs1.progwml6.com/files/maven/"
+            name "NeoForge"
+            url "https://maven.neoforged.net/releases/"
         }
         maven {
             name "Jared's maven" // JEI
@@ -63,7 +191,7 @@ allprojects {
             url "https://maven.terraformersmc.com/"
         }
         maven {
-            name "Ladysnake Mods" // Cardinal Components
+            name "Ladysnake Mods"
             url "https://maven.ladysnake.org/releases"
         }
         flatDir {
@@ -71,17 +199,12 @@ allprojects {
         }
     }
 
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
         options.encoding "UTF-8"
-        options.release.set(17)
+        options.release.set(Integer.getInteger(java_version))
     }
 
     java {
         withSourcesJar()
     }
-}
-
-tasks.register("publishAllCurseforgeAndModrinth", Task) {
-    dependsOn ":forge:publishCurseForgeAndModrinth"
-    dependsOn ":fabric:publishCurseForgeAndModrinth"
 }
